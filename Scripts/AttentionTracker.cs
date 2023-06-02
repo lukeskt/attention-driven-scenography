@@ -27,8 +27,6 @@ namespace AttentionDrivenScenography
         private Bounds meshBounds;
         private AttentionDatastore AttnDatastore;
 
-        private List<AttentionBehaviour> attentionBehaviours;
-
         // Start is called before the first frame update
         void Start()
         {
@@ -45,25 +43,6 @@ namespace AttentionDrivenScenography
             {
                 Debug.Log("Attention Datastore not found. Data will be stored locally to this component only.");
             }
-            // TESTING: draw lines based on grabbing objects that ref this object?
-            //var attnbhvs = FindObjectsOfType<AttentionBehaviour>().ToList();
-            //foreach (var item in attnbhvs)
-            //{
-            //    if (item.attentionTrackers.Contains(this))
-            //    {
-            //        attentionBehaviours.Add(item);
-            //        item.gameObject.AddComponent<LineRenderer>();
-            //        var connectionLine = item.GetComponent<LineRenderer>();
-            //        //connectionLine.material = Resources.Load("Materials/Default-Line") as Material;
-            //        connectionLine.startWidth = 0.05f;
-            //        connectionLine.endWidth = 0.05f;
-            //        connectionLine.SetPosition(0, transform.position);
-            //        connectionLine.startColor = Color.yellow;
-            //        connectionLine.SetPosition(1, item.transform.position);
-            //        connectionLine.endColor = Color.red;
-            //        print(item);
-            //    }
-            //}
         }
 
         private void CamSetup()
@@ -98,19 +77,6 @@ namespace AttentionDrivenScenography
             if (cumulativeAttention < cumulativeAttentionMaximum) cumulativeAttention += currentAttention * Time.deltaTime; // multiplier needed here?
             else if (cumulativeAttention >= cumulativeAttentionMaximum) cumulativeAttention = cumulativeAttentionMaximum;
             if (AttnDatastore) WriteToDatastore();
-
-            // TESTING: Debug line draw
-            //foreach (var item in attentionBehaviours)
-            //{
-            //    if (Input.GetKey(KeyCode.E))
-            //    {
-            //        item.GetComponent<LineRenderer>().enabled = true;
-            //    }
-            //    else
-            //    {
-            //        item.GetComponent<LineRenderer>().enabled = false;
-            //    }
-            //}
         }
 
         private void OnDisable ()
@@ -194,23 +160,6 @@ namespace AttentionDrivenScenography
             if (GeometryUtility.TestPlanesAABB(planes, meshBounds)) return true;
             else return false;
         }
-
-        //TODO: Get this to draw status over object on screen...
-        //private void DrawStatus()
-        //{
-        //    Vector3 targPos = transform.position;
-        //    Vector3 camForward = Camera.main.transform.forward;
-        //    Vector3 camPos = Camera.main.transform.position + camForward;
-        //    float distInFrontOfCamera = Vector3.Dot(targPos - camPos, camForward);
-        //    if (distInFrontOfCamera < 0f)
-        //    {
-        //        targPos -= camForward * distInFrontOfCamera;
-        //    }
-        //    Vector2 pos = RectTransformUtility.WorldToScreenPoint(Camera.main, targPos);
-        //    gameObject.AddComponent<RectTransform>();
-        //    //gameObject.AddComponent<TMP_Text>();
-        //    gameObject.GetComponent<RectTransform>().position = pos;
-        //}
 
 #if UNITY_EDITOR
         public Texture2D image;
