@@ -38,7 +38,16 @@ namespace AttentionDrivenScenography
 
         void Update()
         {
-            CumulativeAttentionRating = AttentionTracker.CumulativeAttention;
+            // TODO: try get tracker, if not live then go to datastore.
+            if (AttentionTracker)
+            {
+                CumulativeAttentionRating = AttentionTracker.CumulativeAttention;
+            }
+            else
+            {
+                CumulativeAttentionRating = AttentionDatastore.AttentionTrackingObjects.Find(x => x.name == AttentionTracker.name).cumulativeAttention;
+                Debug.Log("Tracker not available, getting from Datastore...");
+            }
             if (UpdateCheck)
             {
                 CumulativeAttentionReaction(CumulativeAttentionRating);
@@ -48,49 +57,6 @@ namespace AttentionDrivenScenography
         public virtual void CumulativeAttentionReaction(float? CumulativeAttentionRating)
         {
 
-        }
-
-        public Dictionary<float, bool> ThresholdCheck(float rating, params float[] thresholds)
-        {
-            Dictionary<float, bool> thresholdChecks = new Dictionary<float, bool>();
-            foreach (var threshold in thresholds)
-            {
-                if (rating > threshold)
-                {
-                    thresholdChecks.Add(threshold, true);
-                }
-                else
-                {
-                    thresholdChecks.Add(threshold, false);
-                }
-            }
-            return thresholdChecks;
-        }
-
-        public bool RangeCheck(float attentionRating, int lower, int upper)
-        {
-            if (lower <= attentionRating && attentionRating <= upper) return true;
-            else return false;
-        }
-
-        public void FirstPastThePost ()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ProportionalRepresentation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TugOfWar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual float MapValue(float value, float fromLow, float fromHigh, float toLow, float toHigh)
-        {
-            return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
         }
     }
 }

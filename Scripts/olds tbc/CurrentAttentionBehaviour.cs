@@ -37,27 +37,5 @@ namespace AttentionDrivenScenography
         {
 
         }
-
-        public virtual Dictionary<float, bool> ThresholdCheck(float rating, params float[] thresholds)
-        {
-            Dictionary<float, bool> thresholdChecks = new Dictionary<float, bool>();
-            foreach (var threshold in thresholds)
-            {
-                if (rating > threshold)
-                {
-                    thresholdChecks.Add(threshold, true);
-                }
-                else
-                {
-                    thresholdChecks.Add(threshold, false);
-                }
-            }
-            return thresholdChecks;
-        }
-
-        public virtual float MapValue(float value, float fromLow, float fromHigh, float toLow, float toHigh)
-        {
-            return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
-        }
     }
 }

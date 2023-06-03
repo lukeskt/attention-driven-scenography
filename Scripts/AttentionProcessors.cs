@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AttentionDrivenScenography
 {
-    public class AttentionProcessing
+    public static class AttentionProcessors
     {
         public enum ListReturnMode
         {

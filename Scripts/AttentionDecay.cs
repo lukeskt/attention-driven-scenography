@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace AttentionDrivenScenography
 {
-    public class AttentionDecay : CurrentAttentionBehaviour
+    public class AttentionDecay : AttnBehaviourNew
     {
         public float decayRate = 0.5f;
 
-        public override void CurrentAttentionReaction(float? attentionRating)
+        public override void CurrentAttentionBehaviour(float? attentionRating)
         {
             if(attentionRating <= 0 && AttentionTracker.CumulativeAttention > 0)
             {
