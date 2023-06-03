@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AttentionDrivenScenography
 {
-    public class CumulativeAttentionDecay : CurrentAttentionBehaviour
+    public class AttentionDecay : CurrentAttentionBehaviour
     {
         public float decayRate = 0.5f;
 
