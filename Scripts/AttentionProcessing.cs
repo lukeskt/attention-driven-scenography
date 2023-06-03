@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AttentionDrivenScenography
 {
-    public class AttentionProcessing : MonoBehaviour
+    public class AttentionProcessing
     {
         public enum ListReturnMode
         {
@@ -30,19 +30,28 @@ namespace AttentionDrivenScenography
             }
         }
 
+        public static float CombinedAttention (List<AttentionTracker> attentionTrackers)
+        {
+            float combined = attentionTrackers.Sum(x => x.CumulativeAttention);
+            return combined;
+        }
+
         // TODO: Figure out how to make this returnable.
-        public static void Proportions (List<AttentionTracker> attentionTrackers)
+        public static Dictionary<string, float> Proportions (List<AttentionTracker> attentionTrackers)
         {
             float totalAttention = 0f;
             foreach (var tracker in attentionTrackers)
             {
                 totalAttention += tracker.CumulativeAttention;
             }
+            Dictionary<string, float>  proportionsList = new Dictionary<string, float>();
             foreach (var tracker in attentionTrackers)
             {
                 float trackerPercentage = (tracker.CumulativeAttention / totalAttention) * 100;
-                print($"{tracker.name}: {trackerPercentage}%");
+                proportionsList.Add(tracker.name, trackerPercentage);
+                //print($"{tracker.name}: {trackerPercentage}%");
             }
+            return proportionsList;
         }
 
         // TODO: Maybe just replace this with custom thresholds as normal... i.e. if (rating > 100) etc...
@@ -73,7 +82,7 @@ namespace AttentionDrivenScenography
             if (negPercentage > posPercentage) difference = negPercentage - posPercentage;
             else difference = posPercentage - negPercentage;
             // want to do something here where the neg pulls it down to 0, the pos pulls it up to 1?
-            print($"Negative: {negPercentage}, Positive: {posPercentage}, Difference: {difference}");
+            //print($"Negative: {negPercentage}, Positive: {posPercentage}, Difference: {difference}");
             return difference;
         }
 
