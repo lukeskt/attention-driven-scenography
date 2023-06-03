@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace AttentionDrivenScenography
 {
-    public class ColourChangeCumulative : CumulativeAttentionBehaviour
+    public class ColourChangeCumulative : AttentionBehaviour
     {
         public Renderer rend;
 
-        public override void CumulativeAttentionReaction(float? attentionRating)
+        public override void CumulativeAttentionBehaviour(float? attentionRating)
         {
             Color col1 = Color.green;
             Color col2 = Color.red;

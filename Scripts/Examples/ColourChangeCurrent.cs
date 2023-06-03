@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace AttentionDrivenScenography
 {
-    public class ColourChangeCurrent : CurrentAttentionBehaviour
+    public class ColourChangeCurrent : AttentionBehaviour
     {
         public Renderer rend;
 
-        public override void CurrentAttentionReaction(float? attentionRating)
+        public override void CurrentAttentionBehaviour(float? attentionRating)
         {
             Color col1 = Color.yellow;
             Color col2 = Color.magenta;

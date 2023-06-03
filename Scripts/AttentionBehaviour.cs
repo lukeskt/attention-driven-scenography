@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AttentionDrivenScenography
 {
-    public abstract class AttnBehaviourNew : MonoBehaviour
+    public abstract class AttentionBehaviour : MonoBehaviour
     {
         // Attention Ratings Sources
         [field: SerializeField] public AttentionDatastore AttentionDatastore { get; set; }
@@ -20,6 +20,7 @@ namespace AttentionDrivenScenography
         public bool StartCheck;
         [Tooltip("Calls code in Update, useful for continuously change in response to current attention.")]
         public bool UpdateCheck;
+        // TODO: Maybe also awake, onenable, on disable, fixedupdate, when called externally, etc?
 
         [Tooltip("Calls the Current Attention Behaviour if checked.")]
         public bool DoCurrentBehaviour;
@@ -28,6 +29,8 @@ namespace AttentionDrivenScenography
 
         void Start()
         {
+            // TODO: account for startcheck w/o tracker... then final else? just... better here and in update.
+            // MAYBE ALSO EXTRACT ALL THIS TO A FUNC TO CALL ON BOTH REDUCE CODE COPYPASTA
             // Get Attention Values
             if (AttentionTracker != null)
             {
@@ -47,7 +50,7 @@ namespace AttentionDrivenScenography
             }
             else
             {
-                Debug.Log("Tracker not available, can't run current attention behaviour...");
+                //Debug.Log("Tracker not available, can't run current attention behaviour...");
                 if (DoCumulativeBehaviour) CumulativeAttentionBehaviour(CumulativeAttentionRating);
             }
         }
@@ -74,7 +77,7 @@ namespace AttentionDrivenScenography
             }
             else
             {
-                Debug.Log("Tracker not available, can't run current attention behaviour...");
+                //Debug.Log("Tracker not available, can't run current attention behaviour...");
                 if (DoCumulativeBehaviour) CumulativeAttentionBehaviour(CumulativeAttentionRating);
             }
         }
