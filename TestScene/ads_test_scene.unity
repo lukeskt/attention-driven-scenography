@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2157.9084, g: 2261.2249, b: 3282.938, a: 1}
+  m_IndirectSpecularColor: {r: 2157.3528, g: 2260.758, b: 3282.567, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -574,6 +574,7 @@ GameObject:
   - component: {fileID: 282778457}
   - component: {fileID: 282778458}
   - component: {fileID: 282778459}
+  - component: {fileID: 282778460}
   m_Layer: 0
   m_Name: ADS Text
   m_TagString: Untagged
@@ -628,8 +629,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -853,6 +854,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 19.1093, y: 3.4534883, z: 0}
   m_Center: {x: -0.37209415, y: 0.16194582, z: 0}
+--- !u!114 &282778460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282778453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468f733036b946844b941496dccdf188, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AttentionDatastore>k__BackingField: {fileID: 1948897850}
+  <AttentionTracker>k__BackingField: {fileID: 282778458}
+  StartCheck: 1
+  UpdateCheck: 1
+  DoCurrentBehaviour: 1
+  DoCumulativeBehaviour: 1
+  captionText: {fileID: 282778454}
 --- !u!1 &310094589
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,6 +1115,7 @@ GameObject:
   - component: {fileID: 390353722}
   - component: {fileID: 390353721}
   - component: {fileID: 390353724}
+  - component: {fileID: 390353726}
   m_Layer: 0
   m_Name: ADS Debug Object
   m_TagString: Untagged
@@ -1190,7 +1211,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 390353717}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03c6a41ad3c8fdc479cd749e6faba626, type: 3}
   m_Name: 
@@ -1238,6 +1259,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <AttentionDatastore>k__BackingField: {fileID: 0}
   <AttentionTrackers>k__BackingField: []
+--- !u!114 &390353726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390353717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84fe0221b8bd33146849888fe5bbad6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AttentionDatastore>k__BackingField: {fileID: 1948897850}
+  <AttentionTracker>k__BackingField: {fileID: 390353720}
+  StartCheck: 1
+  UpdateCheck: 1
+  DoCurrentBehaviour: 1
+  DoCumulativeBehaviour: 0
 --- !u!1 &432432459
 GameObject:
   m_ObjectHideFlags: 0
@@ -3075,7 +3114,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 897a8a0bd043c644994aa49c0609f428, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3347,9 +3386,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IsGlobal: 0
   priority: 0
-  blendDistance: 0
+  blendDistance: 4
   weight: 1
-  sharedProfile: {fileID: 0}
+  sharedProfile: {fileID: 11400000, guid: 891662db46745c349a8b750f3f184d71, type: 2}
 --- !u!4 &1622228262
 Transform:
   m_ObjectHideFlags: 0
@@ -4363,6 +4402,8 @@ GameObject:
   - component: {fileID: 2118384623}
   - component: {fileID: 2118384622}
   - component: {fileID: 2118384621}
+  - component: {fileID: 2118384626}
+  - component: {fileID: 2118384625}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -4411,7 +4452,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: 897a8a0bd043c644994aa49c0609f428, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4456,3 +4497,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2118384625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118384620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b68c3abbf50db1c4d9e35a647bd8ea95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AttentionDatastore>k__BackingField: {fileID: 1948897850}
+  <AttentionTracker>k__BackingField: {fileID: 2118384626}
+  StartCheck: 0
+  UpdateCheck: 1
+  DoCurrentBehaviour: 1
+  DoCumulativeBehaviour: 0
+  mat: {fileID: 2100000, guid: d3fa990485269f14fa204a640a4ec976, type: 2}
+--- !u!114 &2118384626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118384620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0043fccf41ad6148bb3f4651238358b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cumulativeAttentionMaximum: 300
+  distanceThreshold: 50
+  cam: {fileID: 0}
+  image: {fileID: 2800000, guid: 4e7bd72a466223d46b60e38be4c587e2, type: 3}
