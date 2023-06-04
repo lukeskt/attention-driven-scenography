@@ -45,7 +45,7 @@ namespace AttentionDrivenScenography
             // Run Behaviour Code
             if (StartCheck && AttentionTracker != null)
             {
-                if (DoCurrentBehaviour) CurrentAttentionBehaviour(CurrentAttentionRating);
+                if (DoCurrentBehaviour) CurrentAttentionBehaviour();//CurrentAttentionRating);
                 if (DoCumulativeBehaviour) CumulativeAttentionBehaviour(CumulativeAttentionRating);
             }
             else
@@ -72,7 +72,7 @@ namespace AttentionDrivenScenography
             // Run Behaviour Code
             if (UpdateCheck && AttentionTracker != null)
             {
-                if (DoCurrentBehaviour) CurrentAttentionBehaviour(CurrentAttentionRating);
+                if (DoCurrentBehaviour) CurrentAttentionBehaviour();//CurrentAttentionRating);
                 if (DoCumulativeBehaviour) CumulativeAttentionBehaviour(CumulativeAttentionRating);
             }
             else
@@ -82,7 +82,7 @@ namespace AttentionDrivenScenography
             }
         }
 
-        public virtual void CurrentAttentionBehaviour (float? currentAttention)
+        public virtual void CurrentAttentionBehaviour ()//float? currentAttention)
         {
             return;
         }
