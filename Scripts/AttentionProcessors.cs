@@ -26,62 +26,6 @@ namespace AttentionDrivenScenography
 
         public static AttentionType attnType = new AttentionType();
 
-        public static (string, float) ProcessorSelector(List<AttentionTracker> attentionTrackers, ProcessorMode processor, AttentionType attentionType)
-        {
-            AttentionTracker result;
-            switch (processor)
-            {
-                case ProcessorMode.Total:
-                    return CombinedAttention(attentionTrackers, attnType);
-                case ProcessorMode.Proportional:
-                    //return ProportionalAttention(attentionTrackers, attnType); // ugh this is a special case! TODO: FIGURE THIS OUT
-                case ProcessorMode.Largest:
-                    if (attentionType == AttentionType.Cumulative)
-                    {
-                        result = attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).Reverse().ToList()[0];
-                        return (result.name, result.CumulativeAttention);
-                    }
-                    else
-                    {
-                        result = attentionTrackers.ToList().OrderBy(x => x.CurrentAttention).Reverse().ToList()[0];
-                        return (result.name, result.CurrentAttention);
-                    }
-                case ProcessorMode.Median:
-                    int mid = (attentionTrackers.Count - 1) / 2;
-                    if (attentionType == AttentionType.Cumulative)
-                    {
-                        result = attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[mid];
-                        return (result.name, result.CumulativeAttention);
-                    }
-                    else
-                    {
-                        result = attentionTrackers.ToList().OrderBy(x => x.CurrentAttention).ToList()[mid];
-                        return (result.name, result.CurrentAttention);
-                    }
-                case ProcessorMode.Smallest:
-                    if (attentionType == AttentionType.Cumulative)
-                    {
-                        result = attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[0];
-                        return (result.name, result.CumulativeAttention);
-                    }
-                    else
-                    {
-                        result = attentionTrackers.ToList().OrderBy(x => x.CurrentAttention).ToList()[0];
-                        return (result.name, result.CurrentAttention);
-                    }
-                default:
-                    return ("Error!", 0f);
-            }
-        }
-
-        private static (string, float) CombinedAttention(List<AttentionTracker> attentionTrackers, AttentionType attentionType)
-        {
-            float combined = 0f;
-            if (attentionType == AttentionType.Cumulative) combined = attentionTrackers.Sum(x => x.CumulativeAttention);
-            else if (attentionType == AttentionType.Current) combined = attentionTrackers.Sum(x => x.CurrentAttention);
-            return ("Total", combined);
-        }
-
         // TODO: Figure out how to make this returnable.
         private static Dictionary<string, float> ProportionalAttention (List<AttentionTracker> attentionTrackers, AttentionType attentionType)
         {
@@ -115,17 +59,6 @@ namespace AttentionDrivenScenography
             // want to do something here where the neg pulls it down to 0, the pos pulls it up to 1?
             //print($"Negative: {negPercentage}, Positive: {posPercentage}, Difference: {difference}");
             return difference;
-        }
-
-        public static bool RangeCheck(float attentionRating, int lower, int upper)
-        {
-            if (lower <= attentionRating && attentionRating <= upper) return true;
-            else return false;
-        }
-
-        public static float MapValue(float value, float fromLow, float fromHigh, float toLow, float toHigh)
-        {
-            return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
         }
     }
 }
