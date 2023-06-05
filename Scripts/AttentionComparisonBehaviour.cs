@@ -26,7 +26,7 @@ namespace AttentionDrivenScenography
         {
             Total,
             Proportional,
-            TugOfWar,
+            //TugOfWar,
             Largest,
             Median,
             Smallest
@@ -92,6 +92,8 @@ namespace AttentionDrivenScenography
             }
         }
 
+        // Maybe collapse these to calculate results for both cumulative and current, making behaviour handling easier? But does more calculation work as a tradeoff.
+        // But then can also play off results of both against each other same as in the non comparison behaviour.
         private void ProcessAttentionValues(Comparisons comparisonMode, AttentionType attentionType)
         {
             switch (comparisonMode)
@@ -102,9 +104,8 @@ namespace AttentionDrivenScenography
                 case Comparisons.Proportional: // TODO: FIGURE OUT THIS SPECIAL CASE!
                     GetProportionalAttention(attentionType);
                     return;
-                case Comparisons.TugOfWar: // This is probably also a special case... may be a diff ver of proportional also...
-
-                    return;
+                //case Comparisons.TugOfWar: // This is probably also a special case... may be a diff ver of proportional also...
+                    //return;
                 case Comparisons.Largest:
                     GetLargestAttention(attentionType);
                     return;
@@ -176,14 +177,19 @@ namespace AttentionDrivenScenography
         {
             // NOTE THIS IS SUPER HACKY. IT GETS THE FIRST TRACKER IN THE LIST AND WORKS IT OUT AS A PROPORTION OF THE TOTAL
             // IT'S NOT GOOD BUT IT IS A FUDGE FOR A STICKY PROBLEM I CAN'T BE BOTHERED TO SOLVE RIGHT NOW. ANSWERS ON A POSTCARD.
+            // Can we save it to a list available in the behaviour instead maybe?
             if (attentionType == AttentionType.Current)
             {
                 float total = LocalAttentionRecordsList.Sum(x => x.currentAttention);
+                if (total == 0)
+                {
+                    total = 1f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
+                }
                 float firstTrackerPecentage = (LocalAttentionRecordsList[0].currentAttention / total) * 100;
                 // Pop into the results.
                 processingAttentionResult.name = $"Proportional for {LocalAttentionRecordsList[0].name}";
-                processingAttentionResult.currentAttention = 0f;
-                processingAttentionResult.cumulativeAttention = firstTrackerPecentage;
+                processingAttentionResult.currentAttention = firstTrackerPecentage;
+                processingAttentionResult.cumulativeAttention = 0f;
             }
             else if (attentionType == AttentionType.Cumulative)
             {
@@ -195,6 +201,44 @@ namespace AttentionDrivenScenography
                 processingAttentionResult.cumulativeAttention = firstTrackerPecentage;
             }
         }
+
+        /* 
+         * OLD PROPORTIONAL AND TUG OF WAR IMPLS FROM PROCESSORS STATIC CLASS HERE FOR REF FOR FUTURE TRIES... 
+         *         
+        private static Dictionary<string, float> ProportionalAttention (List<AttentionTracker> attentionTrackers, AttentionType attentionType)
+        {
+            float totalAttention = 0f;
+            foreach (var tracker in attentionTrackers)
+            {
+                if (attentionType == AttentionType.Cumulative) totalAttention += tracker.CumulativeAttention;
+                else if (attentionType == AttentionType.Current) totalAttention += tracker.CurrentAttention;
+            }
+            Dictionary<string, float> proportionsList = new Dictionary<string, float>();
+            foreach (var tracker in attentionTrackers)
+            {
+                float trackerPercentage = 0f;
+                if (attentionType == AttentionType.Cumulative) trackerPercentage = (tracker.CumulativeAttention / totalAttention) * 100;
+                else if (attentionType == AttentionType.Current) trackerPercentage = (tracker.CurrentAttention / totalAttention) * 100;
+                proportionsList.Add(tracker.name, trackerPercentage);
+                //print($"{tracker.name}: {trackerPercentage}%");
+            }
+            return proportionsList;
+        }
+
+        private static float TugOfWar(float negRating, float posRating)
+        {
+            // Trying a version of prop rep stuff here:
+            float totalAttention = negRating + posRating;
+            float negPercentage = (negRating / totalAttention) * 1.00f;
+            float posPercentage = (posRating / totalAttention) * 1.00f;
+            float difference = 0f;
+            if (negPercentage > posPercentage) difference = negPercentage - posPercentage;
+            else difference = posPercentage - negPercentage;
+            // want to do something here where the neg pulls it down to 0, the pos pulls it up to 1?
+            //print($"Negative: {negPercentage}, Positive: {posPercentage}, Difference: {difference}");
+            return difference;
+        }
+         */
 
         public float MapValue(float value, float fromLow, float fromHigh, float toLow, float toHigh)
         {
