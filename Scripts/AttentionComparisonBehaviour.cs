@@ -117,7 +117,7 @@ namespace AttentionDrivenScenography
             }
         }
 
-        private void GetSmallestAttention(AttentionType attentionType)
+        public void GetSmallestAttention(AttentionType attentionType)
         {
             if (attentionType == AttentionType.Current)
             {
@@ -129,7 +129,7 @@ namespace AttentionDrivenScenography
             }
         }
 
-        private void GetMedianAttention(AttentionType attentionType)
+        public void GetMedianAttention(AttentionType attentionType)
         {
             int mid = (LocalAttentionRecordsList.Count - 1) / 2;
             if (attentionType == AttentionType.Current)
@@ -142,7 +142,7 @@ namespace AttentionDrivenScenography
             }
         }
 
-        private void GetLargestAttention(AttentionType attentionType)
+        public void GetLargestAttention(AttentionType attentionType)
         {
             if (attentionType == AttentionType.Current)
             {
@@ -154,7 +154,7 @@ namespace AttentionDrivenScenography
             }
         }
 
-        private void GetCombinedAttention(AttentionType attentionType)
+        public void GetCombinedAttention(AttentionType attentionType)
         {
             if (attentionType == AttentionType.Current)
             {
@@ -172,7 +172,7 @@ namespace AttentionDrivenScenography
             }
         }
 
-        private void GetProportionalAttention(AttentionType attentionType)
+        public void GetProportionalAttention(AttentionType attentionType)
         {
             // NOTE THIS IS SUPER HACKY. IT GETS THE FIRST TRACKER IN THE LIST AND WORKS IT OUT AS A PROPORTION OF THE TOTAL
             // IT'S NOT GOOD BUT IT IS A FUDGE FOR A STICKY PROBLEM I CAN'T BE BOTHERED TO SOLVE RIGHT NOW. ANSWERS ON A POSTCARD.
@@ -181,7 +181,7 @@ namespace AttentionDrivenScenography
                 float total = LocalAttentionRecordsList.Sum(x => x.currentAttention);
                 float firstTrackerPecentage = (LocalAttentionRecordsList[0].currentAttention / total) * 100;
                 // Pop into the results.
-                processingAttentionResult.name = "Proportional";
+                processingAttentionResult.name = $"Proportional for {LocalAttentionRecordsList[0].name}";
                 processingAttentionResult.currentAttention = 0f;
                 processingAttentionResult.cumulativeAttention = firstTrackerPecentage;
             }
@@ -190,7 +190,7 @@ namespace AttentionDrivenScenography
                 float total = LocalAttentionRecordsList.Sum(x => x.cumulativeAttention);
                 float firstTrackerPecentage = (LocalAttentionRecordsList[0].cumulativeAttention / total) * 100;
                 // Pop into the results.
-                processingAttentionResult.name = "Proportional";
+                processingAttentionResult.name = $"Proportional for {LocalAttentionRecordsList[0].name}";
                 processingAttentionResult.currentAttention = 0f;
                 processingAttentionResult.cumulativeAttention = firstTrackerPecentage;
             }
