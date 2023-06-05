@@ -365,9 +365,9 @@ Material:
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _MainOffset: {r: 0, g: 0, b: 0, a: 0}
-    - _MainTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _MainTiling: {r: 3.5, g: 2, b: 0, a: 0}
     - _SecondaryOffset: {r: 0, g: 0, b: 0, a: 0}
-    - _SecondaryTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _SecondaryTiling: {r: 3.5, g: 2, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
