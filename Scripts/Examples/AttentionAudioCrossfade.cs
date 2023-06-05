@@ -15,7 +15,7 @@ namespace AttentionDrivenScenography
         private bool clickOnPlayed;
 
         // Update is called once per frame
-        public override void CurrentAttentionBehaviour()
+        public override void AttentionEffect()
         {
             CrossfadeAudio();
         }

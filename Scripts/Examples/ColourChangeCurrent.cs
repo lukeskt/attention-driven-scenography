@@ -8,7 +8,7 @@ namespace AttentionDrivenScenography
     {
         public Renderer rend;
 
-        public override void CurrentAttentionBehaviour()
+        public override void AttentionEffect()
         {
             Color col1 = Color.yellow;
             Color col2 = Color.magenta;

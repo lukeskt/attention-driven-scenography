@@ -8,7 +8,7 @@ namespace AttentionDrivenScenography
     {
         public Material mat;
 
-        public override void CurrentAttentionBehaviour()
+        public override void AttentionEffect()
         {
             var blendValue = AttentionProcessors.MapValue((float)CurrentAttentionRating, 0, 1, 1, 10);
             var clampedCumulative = Mathf.Clamp((float)CumulativeAttentionRating, 1, 20);

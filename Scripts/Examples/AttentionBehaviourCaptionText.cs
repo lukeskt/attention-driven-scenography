@@ -16,7 +16,7 @@ namespace AttentionDrivenScenography
         }
 
         // Update is called once per frame
-        public override void CurrentAttentionBehaviour()
+        public override void AttentionEffect()
         {
             if (CurrentAttentionRating > 0.80)
             {
