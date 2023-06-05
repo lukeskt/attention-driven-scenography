@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,36 +17,34 @@ namespace AttentionDrivenScenography
         private float? cumulativeAttentionRating = null;
         public virtual float? CumulativeAttentionRating { get => cumulativeAttentionRating; set => cumulativeAttentionRating = value; }
 
-        // Flags
-        // TODO: Maybe also onenable, ondisable, fixedupdate, when called externally, etc?
-        [Tooltip("Calls code on Awake.")]
-        public bool AwakeCheck;
-        [Tooltip("Calls code on OnEnable.")]
-        public bool OnEnableCheck;
-        [Tooltip("Calls code in Start, useful for a one-off action based on current attention when an object is activated.")]
-        public bool StartCheck;
-        [Tooltip("Calls code on FixedUpdated.")]
-        public bool FixedUpdateCheck;
-        [Tooltip("Calls code in Update, useful for continuously change in response to current attention.")]
-        public bool UpdateCheck;
-        [Tooltip("Calls code on OnDisable.")]
-        public bool OnDisableCheck;
+        // Event Flags
+        [Flags]
+        public enum EventChecks
+        {
+            None = 0,
+            AwakeCheck = 1,
+            OnEnableCheck = 2,
+            StartCheck = 4,
+            FixedUpdateCheck = 8,
+            UpdateCheck = 16,
+            OnDisableCheck = 32
+        }
+        public EventChecks eventChecks = EventChecks.None;
 
         void Awake() {
-            try { AttentionDatastore = FindObjectOfType<AttentionDatastore>(); }
-            catch (System.NullReferenceException) { Debug.LogWarning("Attention Datastore not found in scene, please add."); }
-            if (AwakeCheck) { GetAttentionValues(); AttentionEffect(); }
+            AttentionDatastore = FindObjectOfType<AttentionDatastore>();
+            if (!AttentionDatastore) Debug.LogWarning("Attention Datastore not found in scene, please add to avoid issues with cumulative attention behaviours.");
+            if (eventChecks == EventChecks.AwakeCheck) { GetAttentionValues(); AttentionEffect(); }
         }
 
-        void OnEnable() { if (OnEnableCheck) { GetAttentionValues(); AttentionEffect(); } }
-        void Start() { if (StartCheck) { GetAttentionValues(); AttentionEffect(); } }
-        void FixedUpdate() { if (FixedUpdateCheck) { GetAttentionValues(); AttentionEffect(); } }
-        void Update() { if (UpdateCheck) { GetAttentionValues(); AttentionEffect(); } }
-        void OnDisable() { if (OnDisableCheck) { GetAttentionValues(); AttentionEffect(); } }
+        void OnEnable() { if (eventChecks == EventChecks.OnEnableCheck) { GetAttentionValues(); AttentionEffect(); } }
+        void Start() { if (eventChecks == EventChecks.StartCheck) { GetAttentionValues(); AttentionEffect(); } }
+        void FixedUpdate() { if (eventChecks == EventChecks.FixedUpdateCheck) { GetAttentionValues(); AttentionEffect(); } }
+        void Update() { if (eventChecks == EventChecks.UpdateCheck) { GetAttentionValues(); AttentionEffect(); } }
+        void OnDisable() { if (eventChecks == EventChecks.OnDisableCheck) { GetAttentionValues(); AttentionEffect(); } }
 
         private void GetAttentionValues()
         {
-            // Get Attention Values
             if (AttentionTracker != null)
             {
                 CurrentAttentionRating = AttentionTracker.CurrentAttention;
@@ -58,9 +57,11 @@ namespace AttentionDrivenScenography
             }
         }
 
-        public virtual void AttentionEffect ()
+        public float MapValue(float value, float fromLow, float fromHigh, float toLow, float toHigh)
         {
-            return;
+            return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
         }
+
+        public abstract void AttentionEffect(); // Override this to create bespoke effects in subclass.
     }
 }
