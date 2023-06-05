@@ -228,7 +228,7 @@ Material:
     - _Blend: 0
     - _BlendMode: 0
     - _BlendOp: 0
-    - _BlendOpacity: 1
+    - _BlendOpacity: 11.100958
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
