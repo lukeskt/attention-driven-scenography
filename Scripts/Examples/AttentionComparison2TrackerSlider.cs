@@ -11,7 +11,11 @@ namespace AttentionDrivenScenography
         public Slider slider;
         public override void AttentionComparisonEffect()
         {
-            slider.value = MapValue(processingAttentionResult.cumulativeAttention, 0, AttentionTrackers.Sum(x => x.CumulativeAttention), 0, 1);
+            float val = 0f;
+            if (attentionType == AttentionType.Current) val = Mathf.InverseLerp(0, 100, processingAttentionResult.currentAttention);
+            else if (attentionType == AttentionType.Cumulative) val = Mathf.InverseLerp(0, 100, processingAttentionResult.cumulativeAttention);
+            print(val);
+            slider.value = val;
         }
     }
 }
