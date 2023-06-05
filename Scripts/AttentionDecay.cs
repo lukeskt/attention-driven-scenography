@@ -8,7 +8,7 @@ namespace AttentionDrivenScenography
     {
         public float decayRate = 0.5f;
 
-        public override void CurrentAttentionBehaviour()//float? currentAttention)
+        public override void AttentionEffect()//float? currentAttention)
         {
             if(CurrentAttentionRating <= 0 && AttentionTracker.CumulativeAttention > 0)
             {

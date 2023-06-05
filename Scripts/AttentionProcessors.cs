@@ -7,72 +7,103 @@ namespace AttentionDrivenScenography
 {
     public static class AttentionProcessors
     {
-        public enum ListReturnMode
+        public enum ProcessorMode
         {
+            Total,
+            Proportional,
             Largest,
             Median,
-            Smallest,
+            Smallest
         }
 
-        public static string ResultFromList (List<AttentionTracker> attentionTrackers, ListReturnMode listReturnMode)
+        public static ProcessorMode proc = new ProcessorMode();
+
+        public enum AttentionType
         {
-            switch (listReturnMode)
+            Current,
+            Cumulative
+        }
+
+        public static AttentionType attnType = new AttentionType();
+
+        public static (string, float) ProcessorSelector(List<AttentionTracker> attentionTrackers, ProcessorMode processor, AttentionType attentionType)
+        {
+            AttentionTracker result;
+            switch (processor)
             {
-                case ListReturnMode.Largest:
-                    return attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).Reverse().ToList()[0].name;
-                case ListReturnMode.Median:
-                    int mid = (attentionTrackers.Count - 1 ) / 2;
-                    return attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[mid].name;
-                case ListReturnMode.Smallest:
-                    return attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[0].name;
+                case ProcessorMode.Total:
+                    return CombinedAttention(attentionTrackers, attnType);
+                case ProcessorMode.Proportional:
+                    //return ProportionalAttention(attentionTrackers, attnType); // ugh this is a special case! TODO: FIGURE THIS OUT
+                case ProcessorMode.Largest:
+                    if (attentionType == AttentionType.Cumulative)
+                    {
+                        result = attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).Reverse().ToList()[0];
+                        return (result.name, result.CumulativeAttention);
+                    }
+                    else
+                    {
+                        result = attentionTrackers.ToList().OrderBy(x => x.CurrentAttention).Reverse().ToList()[0];
+                        return (result.name, result.CurrentAttention);
+                    }
+                case ProcessorMode.Median:
+                    int mid = (attentionTrackers.Count - 1) / 2;
+                    if (attentionType == AttentionType.Cumulative)
+                    {
+                        result = attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[mid];
+                        return (result.name, result.CumulativeAttention);
+                    }
+                    else
+                    {
+                        result = attentionTrackers.ToList().OrderBy(x => x.CurrentAttention).ToList()[mid];
+                        return (result.name, result.CurrentAttention);
+                    }
+                case ProcessorMode.Smallest:
+                    if (attentionType == AttentionType.Cumulative)
+                    {
+                        result = attentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[0];
+                        return (result.name, result.CumulativeAttention);
+                    }
+                    else
+                    {
+                        result = attentionTrackers.ToList().OrderBy(x => x.CurrentAttention).ToList()[0];
+                        return (result.name, result.CurrentAttention);
+                    }
                 default:
-                    return "Error!";
+                    return ("Error!", 0f);
             }
         }
 
-        public static float CombinedAttention (List<AttentionTracker> attentionTrackers)
+        private static (string, float) CombinedAttention(List<AttentionTracker> attentionTrackers, AttentionType attentionType)
         {
-            float combined = attentionTrackers.Sum(x => x.CumulativeAttention);
-            return combined;
+            float combined = 0f;
+            if (attentionType == AttentionType.Cumulative) combined = attentionTrackers.Sum(x => x.CumulativeAttention);
+            else if (attentionType == AttentionType.Current) combined = attentionTrackers.Sum(x => x.CurrentAttention);
+            return ("Total", combined);
         }
 
         // TODO: Figure out how to make this returnable.
-        public static Dictionary<string, float> Proportions (List<AttentionTracker> attentionTrackers)
+        private static Dictionary<string, float> ProportionalAttention (List<AttentionTracker> attentionTrackers, AttentionType attentionType)
         {
             float totalAttention = 0f;
             foreach (var tracker in attentionTrackers)
             {
-                totalAttention += tracker.CumulativeAttention;
+                if (attentionType == AttentionType.Cumulative) totalAttention += tracker.CumulativeAttention;
+                else if (attentionType == AttentionType.Current) totalAttention += tracker.CurrentAttention;
             }
-            Dictionary<string, float>  proportionsList = new Dictionary<string, float>();
+            Dictionary<string, float> proportionsList = new Dictionary<string, float>();
             foreach (var tracker in attentionTrackers)
             {
-                float trackerPercentage = (tracker.CumulativeAttention / totalAttention) * 100;
+                float trackerPercentage = 0f;
+                if (attentionType == AttentionType.Cumulative) trackerPercentage = (tracker.CumulativeAttention / totalAttention) * 100;
+                else if (attentionType == AttentionType.Current) trackerPercentage = (tracker.CurrentAttention / totalAttention) * 100;
                 proportionsList.Add(tracker.name, trackerPercentage);
                 //print($"{tracker.name}: {trackerPercentage}%");
             }
             return proportionsList;
         }
 
-        // TODO: Maybe just replace this with custom thresholds as normal... i.e. if (rating > 100) etc...
-        public static Dictionary<float, bool> ThresholdCheck(float rating, params float[] thresholds)
-        {
-            Dictionary<float, bool> thresholdChecks = new Dictionary<float, bool>();
-            foreach (var threshold in thresholds)
-            {
-                if (rating > threshold)
-                {
-                    thresholdChecks.Add(threshold, true);
-                }
-                else
-                {
-                    thresholdChecks.Add(threshold, false);
-                }
-            }
-            return thresholdChecks;
-        }
-
-        public static float TugOfWar(float negRating, float posRating)
+        private static float TugOfWar(float negRating, float posRating)
         {
             // Trying a version of prop rep stuff here:
             float totalAttention = negRating + posRating;
