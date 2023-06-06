@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DecisionOutputLog : MonoBehaviour
+public class AttentionLogging : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
