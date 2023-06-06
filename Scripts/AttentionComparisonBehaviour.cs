@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -55,9 +54,15 @@ namespace AttentionDrivenScenography
         public AttentionType attentionType = new AttentionType();
         public Comparisons comparisonMode = new Comparisons();
 
+        public Color gizmoColor = Color.magenta;
+
+        //public bool showTrackerLink = false;
+        //private Material lineMaterial;
+
         void Awake()
         {
             AttentionDatastore = FindObjectOfType<AttentionDatastore>();
+            //lineMaterial = Resources.Load("Default-Line", typeof(Material)) as Material;
             if (!AttentionDatastore) Debug.LogWarning("Attention Datastore not found in scene, please add to avoid issues with cumulative attention behaviours.");
             if (eventChecks == EventChecks.AwakeCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); }
         }
@@ -65,7 +70,17 @@ namespace AttentionDrivenScenography
         void OnEnable() { if (eventChecks == EventChecks.OnEnableCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
         void Start() { if (eventChecks == EventChecks.StartCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
         void FixedUpdate() { if (eventChecks == EventChecks.FixedUpdateCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
-        void Update() { if (eventChecks == EventChecks.UpdateCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
+        void Update() { 
+            if (eventChecks == EventChecks.UpdateCheck) { 
+                GetAttentionValues(); 
+                ProcessAttentionValues(comparisonMode, attentionType); 
+                AttentionComparisonEffect(); 
+            }
+            //if (showTrackerLink)
+            //{
+            //    ShowTrackerConnection();
+            //}
+        }
         void OnDisable() { if (eventChecks == EventChecks.OnDisableCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
 
         private void GetAttentionValues()
@@ -246,5 +261,38 @@ namespace AttentionDrivenScenography
         }
 
         public abstract void AttentionComparisonEffect(); // Override this to create bespoke effects in subclass.
+
+        private void OnDrawGizmos()
+        {
+            foreach (AttentionTracker tracker in AttentionTrackers)
+            {
+                if (tracker.gameObject != gameObject)
+                {
+                    Gizmos.color = gizmoColor;
+                    Gizmos.DrawLine(transform.position, tracker.transform.position);
+                }
+            }
+
+        }
+
+        //public void ShowTrackerConnection()
+        //{
+        //    foreach (AttentionTracker tracker in AttentionTrackers)
+        //    {
+        //        if (tracker.gameObject != gameObject)
+        //        {
+        //            gameObject.AddComponent<LineRenderer>();
+        //            LineRenderer connection = GetComponent<LineRenderer>();
+        //            connection.material = lineMaterial;
+        //            connection.startWidth = 0.025f;
+        //            connection.endWidth = 0.025f;
+        //            connection.SetPosition(0, tracker.transform.position);
+        //            connection.startColor = Color.magenta;
+        //            connection.SetPosition(1, transform.position);
+        //            connection.endColor = Color.magenta;
+        //        }
+        //    }
+
+        //}
     }
 }
