@@ -14,6 +14,7 @@ namespace AttentionDrivenScenography
         private float currentAttention = 0f;
         private float cumulativeAttention = 0f;
         public float cumulativeAttentionMaximum = 300f; // 5 mins for Woolgatherer, customise for other games/exps.
+        public float cumulativeAttentionDecayRate = 0f;
         public float CurrentAttention { get => currentAttention; }
         public float CumulativeAttention { get => cumulativeAttention; set => cumulativeAttention = value; }
 
@@ -76,6 +77,7 @@ namespace AttentionDrivenScenography
             currentAttention = GetAttentionValue();
             if (cumulativeAttention < cumulativeAttentionMaximum) cumulativeAttention += currentAttention * Time.deltaTime; // multiplier needed here?
             else if (cumulativeAttention >= cumulativeAttentionMaximum) cumulativeAttention = cumulativeAttentionMaximum;
+            if (currentAttention <= 0 && cumulativeAttentionDecayRate > 0 && cumulativeAttention > 0) cumulativeAttention -= cumulativeAttentionDecayRate * Time.deltaTime;
             if (AttnDatastore) WriteToDatastore();
         }
 
