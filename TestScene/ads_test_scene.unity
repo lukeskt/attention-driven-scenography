@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2158.182, g: 2263.6897, b: 3293.063, a: 1}
+  m_IndirectSpecularColor: {r: 2155.5803, g: 2259.7542, b: 3283.8403, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2201,6 +2201,7 @@ GameObject:
   - component: {fileID: 390353721}
   - component: {fileID: 390353724}
   - component: {fileID: 390353727}
+  - component: {fileID: 390353729}
   m_Layer: 0
   m_Name: ADS Debug Object
   m_TagString: Untagged
@@ -2366,6 +2367,23 @@ MonoBehaviour:
   attentionType: 1
   comparisonMode: 0
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!320 &390353729
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390353717}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 0}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings: []
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &432432459
 GameObject:
   m_ObjectHideFlags: 0
