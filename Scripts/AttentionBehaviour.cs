@@ -15,9 +15,6 @@ namespace AttentionDrivenScenography
         private float? cumulativeAttentionRating = null;
         public virtual float? CumulativeAttentionRating { get => cumulativeAttentionRating; set => cumulativeAttentionRating = value; }
 
-        //public bool showTrackerLink = false;
-        //private Material lineMaterial;
-
         // Event Flags
         [Flags]
         public enum EventChecks
@@ -36,7 +33,6 @@ namespace AttentionDrivenScenography
 
         void Awake() {
             AttentionDatastore = FindObjectOfType<AttentionDatastore>();
-            //lineMaterial = Resources.Load("Default-Line", typeof(Material)) as Material;
             if (!AttentionDatastore) Debug.LogWarning("Attention Datastore not found in scene, please add to avoid issues with cumulative attention behaviours.");
             if (eventChecks == EventChecks.AwakeCheck) { GetAttentionValues(); AttentionEffect(); }
         }
@@ -49,10 +45,6 @@ namespace AttentionDrivenScenography
                 GetAttentionValues(); 
                 AttentionEffect(); 
             }
-            //if (showTrackerLink)
-            //{
-            //    ShowTrackerConnection();
-            //}
         }
         void OnDisable() { if (eventChecks == EventChecks.OnDisableCheck) { GetAttentionValues(); AttentionEffect(); } }
 
@@ -85,21 +77,5 @@ namespace AttentionDrivenScenography
                 Gizmos.DrawLine(transform.position, AttentionTracker.transform.position);
             }
         }
-
-        //public void ShowTrackerConnection ()
-        //{
-        //    if (AttentionTracker.gameObject != gameObject)
-        //    {
-        //        gameObject.AddComponent<LineRenderer>();
-        //        LineRenderer connection = GetComponent<LineRenderer>();
-        //        connection.material = lineMaterial;
-        //        connection.startWidth = 0.025f;
-        //        connection.endWidth = 0.025f;
-        //        connection.SetPosition(0, AttentionTracker.transform.position);
-        //        connection.startColor = Color.magenta;
-        //        connection.SetPosition(1, transform.position);
-        //        connection.endColor = Color.magenta;
-        //    }
-        //}
     }
 }

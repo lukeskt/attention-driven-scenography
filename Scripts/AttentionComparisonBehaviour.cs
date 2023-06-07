@@ -25,7 +25,6 @@ namespace AttentionDrivenScenography
         {
             Total,
             Proportional,
-            //TugOfWar,
             Largest,
             Median,
             Smallest
@@ -56,13 +55,9 @@ namespace AttentionDrivenScenography
 
         public Color gizmoColor = Color.magenta;
 
-        //public bool showTrackerLink = false;
-        //private Material lineMaterial;
-
         void Awake()
         {
             AttentionDatastore = FindObjectOfType<AttentionDatastore>();
-            //lineMaterial = Resources.Load("Default-Line", typeof(Material)) as Material;
             if (!AttentionDatastore) Debug.LogWarning("Attention Datastore not found in scene, please add to avoid issues with cumulative attention behaviours.");
             if (eventChecks == EventChecks.AwakeCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); }
         }
@@ -76,10 +71,6 @@ namespace AttentionDrivenScenography
                 ProcessAttentionValues(comparisonMode, attentionType); 
                 AttentionComparisonEffect(); 
             }
-            //if (showTrackerLink)
-            //{
-            //    ShowTrackerConnection();
-            //}
         }
         void OnDisable() { if (eventChecks == EventChecks.OnDisableCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
 
@@ -119,8 +110,6 @@ namespace AttentionDrivenScenography
                 case Comparisons.Proportional: // TODO: FIGURE OUT THIS SPECIAL CASE!
                     GetProportionalAttention(attentionType);
                     return;
-                //case Comparisons.TugOfWar: // This is probably also a special case... may be a diff ver of proportional also...
-                    //return;
                 case Comparisons.Largest:
                     GetLargestAttention(attentionType);
                     return;
@@ -200,7 +189,7 @@ namespace AttentionDrivenScenography
                 {
                     total = 1f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
                 }
-                float firstTrackerPecentage = (LocalAttentionRecordsList[0].currentAttention / total) * 100;
+                float firstTrackerPecentage = LocalAttentionRecordsList[0].currentAttention / total; // this returns a 0.0f to 1.0f based value, more useful than 100% based.
                 // Pop into the results.
                 processingAttentionResult.name = $"Proportional for {LocalAttentionRecordsList[0].name}";
                 processingAttentionResult.currentAttention = firstTrackerPecentage;
@@ -209,51 +198,13 @@ namespace AttentionDrivenScenography
             else if (attentionType == AttentionType.Cumulative)
             {
                 float total = LocalAttentionRecordsList.Sum(x => x.cumulativeAttention);
-                float firstTrackerPecentage = (LocalAttentionRecordsList[0].cumulativeAttention / total) * 100;
+                float firstTrackerPecentage = LocalAttentionRecordsList[0].cumulativeAttention / total;
                 // Pop into the results.
                 processingAttentionResult.name = $"Proportional for {LocalAttentionRecordsList[0].name}";
                 processingAttentionResult.currentAttention = 0f;
                 processingAttentionResult.cumulativeAttention = firstTrackerPecentage;
             }
         }
-
-        /* 
-         * OLD PROPORTIONAL AND TUG OF WAR IMPLS FROM PROCESSORS STATIC CLASS HERE FOR REF FOR FUTURE TRIES... 
-         *         
-        private static Dictionary<string, float> ProportionalAttention (List<AttentionTracker> attentionTrackers, AttentionType attentionType)
-        {
-            float totalAttention = 0f;
-            foreach (var tracker in attentionTrackers)
-            {
-                if (attentionType == AttentionType.Cumulative) totalAttention += tracker.CumulativeAttention;
-                else if (attentionType == AttentionType.Current) totalAttention += tracker.CurrentAttention;
-            }
-            Dictionary<string, float> proportionsList = new Dictionary<string, float>();
-            foreach (var tracker in attentionTrackers)
-            {
-                float trackerPercentage = 0f;
-                if (attentionType == AttentionType.Cumulative) trackerPercentage = (tracker.CumulativeAttention / totalAttention) * 100;
-                else if (attentionType == AttentionType.Current) trackerPercentage = (tracker.CurrentAttention / totalAttention) * 100;
-                proportionsList.Add(tracker.name, trackerPercentage);
-                //print($"{tracker.name}: {trackerPercentage}%");
-            }
-            return proportionsList;
-        }
-
-        private static float TugOfWar(float negRating, float posRating)
-        {
-            // Trying a version of prop rep stuff here:
-            float totalAttention = negRating + posRating;
-            float negPercentage = (negRating / totalAttention) * 1.00f;
-            float posPercentage = (posRating / totalAttention) * 1.00f;
-            float difference = 0f;
-            if (negPercentage > posPercentage) difference = negPercentage - posPercentage;
-            else difference = posPercentage - negPercentage;
-            // want to do something here where the neg pulls it down to 0, the pos pulls it up to 1?
-            //print($"Negative: {negPercentage}, Positive: {posPercentage}, Difference: {difference}");
-            return difference;
-        }
-         */
 
         public float MapValue(float value, float fromLow, float fromHigh, float toLow, float toHigh)
         {
