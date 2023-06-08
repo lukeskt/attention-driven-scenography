@@ -77,7 +77,8 @@ namespace AttentionDrivenScenography
             currentAttention = GetAttentionValue();
             if (cumulativeAttention < cumulativeAttentionMaximum) cumulativeAttention += currentAttention * Time.deltaTime; // multiplier needed here?
             else if (cumulativeAttention >= cumulativeAttentionMaximum) cumulativeAttention = cumulativeAttentionMaximum;
-            if (currentAttention <= 0 && cumulativeAttentionDecayRate > 0 && cumulativeAttention > 0) cumulativeAttention -= cumulativeAttentionDecayRate * Time.deltaTime;
+            if (currentAttention <= 0f && cumulativeAttentionDecayRate > 0f && cumulativeAttention > 0f) cumulativeAttention -= cumulativeAttentionDecayRate * Time.deltaTime;
+            if (cumulativeAttention < 0f) cumulativeAttention = 0f;
             if (AttnDatastore) WriteToDatastore();
         }
 
