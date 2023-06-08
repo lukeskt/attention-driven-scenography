@@ -29,7 +29,7 @@ namespace AttentionDrivenScenography
         }
         public EventChecks eventChecks = EventChecks.None;
 
-        public Color gizmoColor = Color.magenta;
+        public Color trackerLineColor = Color.magenta;
 
         void Awake() {
             AttentionDatastore = FindObjectOfType<AttentionDatastore>();
@@ -73,7 +73,7 @@ namespace AttentionDrivenScenography
         {
             if(AttentionTracker.gameObject != gameObject)
             {
-                Gizmos.color = gizmoColor;
+                Gizmos.color = trackerLineColor;
                 Gizmos.DrawLine(transform.position, AttentionTracker.transform.position);
             }
         }
