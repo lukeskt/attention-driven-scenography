@@ -7,12 +7,13 @@ namespace AttentionDrivenScenography
 {
     public class AttentionComparisonBehaviourExample : AttentionComparisonBehaviour
     {
-        public override void AttentionComparisonEffect()
+        public override void AttentionEffect()
         {
             print($"Comparison Mode: {Enum.GetName(comparisonMode.GetType(), comparisonMode)}. " +
-                $"Result: {processingAttentionResult.name}, " +
-                $"Current Attention {processingAttentionResult.currentAttention}, " +
-                $"Cumulative Attention {processingAttentionResult.cumulativeAttention}");
+                $"Current Result: {currentAttentionResult.comparisonName}, " +
+                $"Current Attention {currentAttentionResult.attentionValue}, " +
+                $"Cumulative Result: {cumulativeAttentionResult.comparisonName}, " +
+                $"Cumulative Attention {cumulativeAttentionResult.attentionValue}");
         }
     }
 }

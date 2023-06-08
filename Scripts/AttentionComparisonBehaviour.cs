@@ -18,8 +18,16 @@ namespace AttentionDrivenScenography
             public float cumulativeAttention { get; set; }
         }
 
+        public struct AttentionComparisonResult
+        {
+            public string comparisonName { get; set; }
+            public float attentionValue { get; set; }
+        }
+
         private List<LocalTrackerValuesCopy> LocalAttentionRecordsList = new List<LocalTrackerValuesCopy>();
-        public LocalTrackerValuesCopy processingAttentionResult = new LocalTrackerValuesCopy();
+        //public LocalTrackerValuesCopy processingAttentionResult = new LocalTrackerValuesCopy();
+        public AttentionComparisonResult currentAttentionResult = new AttentionComparisonResult();
+        public AttentionComparisonResult cumulativeAttentionResult = new AttentionComparisonResult();
 
         public enum Comparisons
         {
@@ -28,12 +36,6 @@ namespace AttentionDrivenScenography
             Largest,
             Median,
             Smallest
-        }
-
-        public enum AttentionType
-        {
-            Current,
-            Cumulative
         }
 
         // Event Flags
@@ -50,29 +52,28 @@ namespace AttentionDrivenScenography
         }
         public EventChecks eventChecks = EventChecks.None;
         // Modes
-        public AttentionType attentionType = new AttentionType();
         public Comparisons comparisonMode = new Comparisons();
 
-        public Color gizmoColor = Color.magenta;
+        public Color trackerLineColor = Color.magenta;
 
         void Awake()
         {
             AttentionDatastore = FindObjectOfType<AttentionDatastore>();
             if (!AttentionDatastore) Debug.LogWarning("Attention Datastore not found in scene, please add to avoid issues with cumulative attention behaviours.");
-            if (eventChecks == EventChecks.AwakeCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); }
+            if (eventChecks == EventChecks.AwakeCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); }
         }
 
-        void OnEnable() { if (eventChecks == EventChecks.OnEnableCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
-        void Start() { if (eventChecks == EventChecks.StartCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
-        void FixedUpdate() { if (eventChecks == EventChecks.FixedUpdateCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
+        void OnEnable() { if (eventChecks == EventChecks.OnEnableCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); } }
+        void Start() { if (eventChecks == EventChecks.StartCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); } }
+        void FixedUpdate() { if (eventChecks == EventChecks.FixedUpdateCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); } }
         void Update() { 
             if (eventChecks == EventChecks.UpdateCheck) { 
                 GetAttentionValues(); 
-                ProcessAttentionValues(comparisonMode, attentionType); 
-                AttentionComparisonEffect(); 
+                ProcessAttentionValues(comparisonMode); 
+                AttentionEffect(); 
             }
         }
-        void OnDisable() { if (eventChecks == EventChecks.OnDisableCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode, attentionType); AttentionComparisonEffect(); } }
+        void OnDisable() { if (eventChecks == EventChecks.OnDisableCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); } }
 
         private void GetAttentionValues()
         {
@@ -100,110 +101,87 @@ namespace AttentionDrivenScenography
 
         // Maybe collapse these to calculate results for both cumulative and current, making behaviour handling easier? But does more calculation work as a tradeoff.
         // But then can also play off results of both against each other same as in the non comparison behaviour.
-        private void ProcessAttentionValues(Comparisons comparisonMode, AttentionType attentionType)
+        private void ProcessAttentionValues(Comparisons comparisonMode)
         {
             switch (comparisonMode)
             {
                 case Comparisons.Total:
-                    GetCombinedAttention(attentionType);
+                    GetCombinedAttention();
                     return;
-                case Comparisons.Proportional: // TODO: FIGURE OUT THIS SPECIAL CASE!
-                    GetProportionalAttention(attentionType);
+                case Comparisons.Proportional:
+                    GetProportionalAttention();
                     return;
                 case Comparisons.Largest:
-                    GetLargestAttention(attentionType);
+                    GetLargestAttention();
                     return;
                 case Comparisons.Median:
-                    GetMedianAttention(attentionType);
+                    GetMedianAttention();
                     return;
                 case Comparisons.Smallest:
-                    GetSmallestAttention(attentionType);
+                    GetSmallestAttention();
                     return;
             }
         }
 
-        public void GetSmallestAttention(AttentionType attentionType)
+        public void GetSmallestAttention()
         {
-            if (attentionType == AttentionType.Current)
-            {
-                processingAttentionResult = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[0];
-            }
-            else if (attentionType == AttentionType.Cumulative)
-            {
-                processingAttentionResult = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[0];
-            }
+            currentAttentionResult.comparisonName = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[0].name;
+            currentAttentionResult.attentionValue = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[0].currentAttention;
+            cumulativeAttentionResult.comparisonName = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[0].name;
+            cumulativeAttentionResult.attentionValue = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[0].cumulativeAttention;
         }
 
-        public void GetMedianAttention(AttentionType attentionType)
+        public void GetMedianAttention()
         {
             int mid = (LocalAttentionRecordsList.Count - 1) / 2;
-            if (attentionType == AttentionType.Current)
-            {
-                processingAttentionResult = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[mid];
-            }
-            else if (attentionType == AttentionType.Cumulative)
-            {
-                processingAttentionResult = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[mid];
-            }
+            currentAttentionResult.comparisonName = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[mid].name;
+            currentAttentionResult.attentionValue = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[mid].currentAttention;
+            cumulativeAttentionResult.comparisonName = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[mid].name;
+            cumulativeAttentionResult.attentionValue = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[mid].cumulativeAttention;
         }
 
-        public void GetLargestAttention(AttentionType attentionType)
+        public void GetLargestAttention()
         {
-            if (attentionType == AttentionType.Current)
-            {
-                processingAttentionResult = LocalAttentionRecordsList.OrderBy(x => x.currentAttention).Reverse().ToList()[0];
-            }
-            else if (attentionType == AttentionType.Cumulative)
-            {
-                processingAttentionResult = LocalAttentionRecordsList.OrderBy(x => x.cumulativeAttention).Reverse().ToList()[0];
-            }
+            currentAttentionResult.comparisonName = LocalAttentionRecordsList.OrderBy(x => x.currentAttention).Reverse().ToList()[0].name;
+            currentAttentionResult.attentionValue = LocalAttentionRecordsList.OrderBy(x => x.currentAttention).Reverse().ToList()[0].currentAttention;
+            cumulativeAttentionResult.comparisonName = LocalAttentionRecordsList.OrderBy(x => x.cumulativeAttention).Reverse().ToList()[0].name;
+            cumulativeAttentionResult.attentionValue = LocalAttentionRecordsList.OrderBy(x => x.cumulativeAttention).Reverse().ToList()[0].cumulativeAttention;
         }
 
-        public void GetCombinedAttention(AttentionType attentionType)
+        public void GetCombinedAttention()
         {
-            if (attentionType == AttentionType.Current)
-            {
-                float total = LocalAttentionRecordsList.Sum(x => x.currentAttention);
-                processingAttentionResult.name = "Total";
-                processingAttentionResult.currentAttention = total;
-                processingAttentionResult.cumulativeAttention = 0f;
-            }
-            else if (attentionType == AttentionType.Cumulative)
-            {
-                float total = LocalAttentionRecordsList.Sum(x => x.cumulativeAttention);
-                processingAttentionResult.name = "Total";
-                processingAttentionResult.currentAttention = 0f;
-                processingAttentionResult.cumulativeAttention = total;
-            }
+            float currentTotal = LocalAttentionRecordsList.Sum(x => x.currentAttention);
+            currentAttentionResult.comparisonName = "Total";
+            currentAttentionResult.attentionValue = currentTotal;
+            float cumulativeTotal = LocalAttentionRecordsList.Sum(x => x.cumulativeAttention);
+            cumulativeAttentionResult.comparisonName = "Total";
+            cumulativeAttentionResult.attentionValue = cumulativeTotal;
         }
 
-        public void GetProportionalAttention(AttentionType attentionType)
+        public void GetProportionalAttention()
         {
             // NOTE THIS IS SUPER HACKY. IT GETS THE FIRST TRACKER IN THE LIST AND WORKS IT OUT AS A PROPORTION OF THE TOTAL
             // IT'S NOT GOOD BUT IT IS A FUDGE FOR A STICKY PROBLEM I CAN'T BE BOTHERED TO SOLVE RIGHT NOW. ANSWERS ON A POSTCARD.
             // Can we save it to a list available in the behaviour instead maybe?
-            if (attentionType == AttentionType.Current)
+
+            // Current
+            float currentTotal = LocalAttentionRecordsList.Sum(x => x.currentAttention);
+            if (currentTotal == 0)
             {
-                float total = LocalAttentionRecordsList.Sum(x => x.currentAttention);
-                if (total == 0)
-                {
-                    total = 1f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
-                }
-                float firstTrackerPecentage = LocalAttentionRecordsList[0].currentAttention / total; // this returns a 0.0f to 1.0f based value, more useful than 100% based.
-                // Pop into the results.
-                processingAttentionResult.name = $"Proportional for {LocalAttentionRecordsList[0].name}";
-                processingAttentionResult.currentAttention = firstTrackerPecentage;
-                processingAttentionResult.cumulativeAttention = 0f;
+                currentTotal = 1f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
             }
-            else if (attentionType == AttentionType.Cumulative)
+            float currentFirstTrackerPecentage = LocalAttentionRecordsList[0].currentAttention / currentTotal; // this returns a 0.0f to 1.0f based value, more useful than 100% based.
+            currentAttentionResult.comparisonName = $"Proportional for {LocalAttentionRecordsList[0].name}";
+            currentAttentionResult.attentionValue = currentFirstTrackerPecentage;
+            // Cumulative
+            float cumulativeTotal = LocalAttentionRecordsList.Sum(x => x.cumulativeAttention);
+            if (cumulativeTotal == 0)
             {
-                float total = LocalAttentionRecordsList.Sum(x => x.cumulativeAttention);
-                float firstTrackerPecentage = LocalAttentionRecordsList[0].cumulativeAttention / total;
-                // Pop into the results.
-                processingAttentionResult.name = $"Proportional for {LocalAttentionRecordsList[0].name}";
-                processingAttentionResult.currentAttention = 0f;
-                processingAttentionResult.cumulativeAttention = firstTrackerPecentage;
+                cumulativeTotal = 1f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
             }
+            float cumulativeFirstTrackerPecentage = LocalAttentionRecordsList[0].cumulativeAttention / cumulativeTotal;
+            cumulativeAttentionResult.comparisonName = $"Proportional for {LocalAttentionRecordsList[0].name}";
+            cumulativeAttentionResult.attentionValue = cumulativeFirstTrackerPecentage;
         }
 
         public float MapValue(float value, float fromLow, float fromHigh, float toLow, float toHigh)
@@ -211,7 +189,7 @@ namespace AttentionDrivenScenography
             return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
         }
 
-        public abstract void AttentionComparisonEffect(); // Override this to create bespoke effects in subclass.
+        public abstract void AttentionEffect(); // Override this to create bespoke effects in subclass.
 
         private void OnDrawGizmos()
         {
@@ -219,31 +197,11 @@ namespace AttentionDrivenScenography
             {
                 if (tracker.gameObject != gameObject)
                 {
-                    Gizmos.color = gizmoColor;
+                    Gizmos.color = trackerLineColor;
                     Gizmos.DrawLine(transform.position, tracker.transform.position);
                 }
             }
 
         }
-
-        //public void ShowTrackerConnection()
-        //{
-        //    foreach (AttentionTracker tracker in AttentionTrackers)
-        //    {
-        //        if (tracker.gameObject != gameObject)
-        //        {
-        //            gameObject.AddComponent<LineRenderer>();
-        //            LineRenderer connection = GetComponent<LineRenderer>();
-        //            connection.material = lineMaterial;
-        //            connection.startWidth = 0.025f;
-        //            connection.endWidth = 0.025f;
-        //            connection.SetPosition(0, tracker.transform.position);
-        //            connection.startColor = Color.magenta;
-        //            connection.SetPosition(1, transform.position);
-        //            connection.endColor = Color.magenta;
-        //        }
-        //    }
-
-        //}
     }
 }
