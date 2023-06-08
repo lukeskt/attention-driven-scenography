@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,13 @@ namespace AttentionDrivenScenography
 {
     public class AttentionComparison2TrackerSlider : AttentionComparisonBehaviour
     {
+        public bool currentAttention = true;
         public Slider slider;
-        public override void AttentionComparisonEffect()
+        public override void AttentionEffect()
         {
-            float val = 0f;
-            if (attentionType == AttentionType.Current) val = Mathf.InverseLerp(0, 100, processingAttentionResult.currentAttention);
-            else if (attentionType == AttentionType.Cumulative) val = Mathf.InverseLerp(0, 100, processingAttentionResult.cumulativeAttention);
+            float val;
+            if (currentAttention) val = currentAttentionResult.attentionValue;
+            else val = Mathf.InverseLerp(0, 1, cumulativeAttentionResult.attentionValue);
             print(val);
             slider.value = val;
         }
