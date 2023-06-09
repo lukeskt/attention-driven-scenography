@@ -11,20 +11,11 @@ namespace AttentionDrivenScenography
         [field: SerializeField, HideInInspector] public AttentionDatastore AttentionDatastore { get; set; }
         [field: SerializeField] public List<AttentionTracker> AttentionTrackers { get; set; }
 
-        //public struct LocalTrackerValuesCopy
-        //{
-        //    public string name { get; set; }
-        //    public float currentAttention { get; set; }
-        //    public float cumulativeAttention { get; set; }
-        //}
-
         public struct AttentionComparisonResult
         {
             public string comparisonName { get; set; }
             public float attentionValue { get; set; }
         }
-
-        //private List<LocalTrackerValuesCopy> LocalAttentionRecordsList = new List<LocalTrackerValuesCopy>();
         public AttentionComparisonResult currentAttentionResult = new AttentionComparisonResult();
         public AttentionComparisonResult cumulativeAttentionResult = new AttentionComparisonResult();
 
@@ -76,7 +67,6 @@ namespace AttentionDrivenScenography
 
         private void GetAttentionValues()
         {
-            //LocalAttentionRecordsList.Clear(); // probably best clear this each frame before performing update? hmmmmm! not sure!
             foreach (var tracker in AttentionTrackers)
             {
                 float currentAttention = 0f;
@@ -90,16 +80,9 @@ namespace AttentionDrivenScenography
                     currentAttention = tracker.CurrentAttention;
                     cumulativeAttention = tracker.CumulativeAttention;
                 }
-                //LocalTrackerValuesCopy localTrackerValues = new LocalTrackerValuesCopy();
-                //localTrackerValues.name = tracker.name;
-                //localTrackerValues.currentAttention = currentAttention;
-                //localTrackerValues.cumulativeAttention = cumulativeAttention;
-                //LocalAttentionRecordsList.Add(localTrackerValues);
             }
         }
 
-        // Maybe collapse these to calculate results for both cumulative and current, making behaviour handling easier? But does more calculation work as a tradeoff.
-        // But then can also play off results of both against each other same as in the non comparison behaviour.
         private void ProcessAttentionValues(Comparisons comparisonMode)
         {
             switch (comparisonMode)
