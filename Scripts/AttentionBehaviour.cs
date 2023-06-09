@@ -9,11 +9,11 @@ namespace AttentionDrivenScenography
         [field: SerializeField, HideInInspector] public AttentionDatastore AttentionDatastore { get; set; }
         [field: SerializeField] public AttentionTracker AttentionTracker { get; set; }
         // Current Attention
-        private float? currentAttentionRating = null;
-        public virtual float? CurrentAttentionRating { get => currentAttentionRating; set => currentAttentionRating = value; }
+        private float currentAttentionRating = 0f;
+        public virtual float CurrentAttentionRating { get => currentAttentionRating; set => currentAttentionRating = value; }
         // Cumulative Attention
-        private float? cumulativeAttentionRating = null;
-        public virtual float? CumulativeAttentionRating { get => cumulativeAttentionRating; set => cumulativeAttentionRating = value; }
+        private float cumulativeAttentionRating = 0f;
+        public virtual float CumulativeAttentionRating { get => cumulativeAttentionRating; set => cumulativeAttentionRating = value; }
 
         // Event Flags
         [Flags]
