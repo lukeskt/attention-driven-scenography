@@ -11,12 +11,12 @@ namespace AttentionDrivenScenography
         [field: SerializeField, HideInInspector] public AttentionDatastore AttentionDatastore { get; set; }
         [field: SerializeField] public List<AttentionTracker> AttentionTrackers { get; set; }
 
-        public struct LocalTrackerValuesCopy
-        {
-            public string name { get; set; }
-            public float currentAttention { get; set; }
-            public float cumulativeAttention { get; set; }
-        }
+        //public struct LocalTrackerValuesCopy
+        //{
+        //    public string name { get; set; }
+        //    public float currentAttention { get; set; }
+        //    public float cumulativeAttention { get; set; }
+        //}
 
         public struct AttentionComparisonResult
         {
@@ -24,8 +24,7 @@ namespace AttentionDrivenScenography
             public float attentionValue { get; set; }
         }
 
-        private List<LocalTrackerValuesCopy> LocalAttentionRecordsList = new List<LocalTrackerValuesCopy>();
-        //public LocalTrackerValuesCopy processingAttentionResult = new LocalTrackerValuesCopy();
+        //private List<LocalTrackerValuesCopy> LocalAttentionRecordsList = new List<LocalTrackerValuesCopy>();
         public AttentionComparisonResult currentAttentionResult = new AttentionComparisonResult();
         public AttentionComparisonResult cumulativeAttentionResult = new AttentionComparisonResult();
 
@@ -77,7 +76,7 @@ namespace AttentionDrivenScenography
 
         private void GetAttentionValues()
         {
-            LocalAttentionRecordsList.Clear(); // probably best clear this each frame before performing update? hmmmmm! not sure!
+            //LocalAttentionRecordsList.Clear(); // probably best clear this each frame before performing update? hmmmmm! not sure!
             foreach (var tracker in AttentionTrackers)
             {
                 float currentAttention = 0f;
@@ -91,11 +90,11 @@ namespace AttentionDrivenScenography
                     currentAttention = tracker.CurrentAttention;
                     cumulativeAttention = tracker.CumulativeAttention;
                 }
-                LocalTrackerValuesCopy localTrackerValues = new LocalTrackerValuesCopy();
-                localTrackerValues.name = tracker.name;
-                localTrackerValues.currentAttention = currentAttention;
-                localTrackerValues.cumulativeAttention = cumulativeAttention;
-                LocalAttentionRecordsList.Add(localTrackerValues);
+                //LocalTrackerValuesCopy localTrackerValues = new LocalTrackerValuesCopy();
+                //localTrackerValues.name = tracker.name;
+                //localTrackerValues.currentAttention = currentAttention;
+                //localTrackerValues.cumulativeAttention = cumulativeAttention;
+                //LocalAttentionRecordsList.Add(localTrackerValues);
             }
         }
 
@@ -125,36 +124,36 @@ namespace AttentionDrivenScenography
 
         public void GetSmallestAttention()
         {
-            currentAttentionResult.comparisonName = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[0].name;
-            currentAttentionResult.attentionValue = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[0].currentAttention;
-            cumulativeAttentionResult.comparisonName = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[0].name;
-            cumulativeAttentionResult.attentionValue = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[0].cumulativeAttention;
+            currentAttentionResult.comparisonName = AttentionTrackers.ToList().OrderBy(x => x.CurrentAttention).ToList()[0].name;
+            currentAttentionResult.attentionValue = AttentionTrackers.ToList().OrderBy(x => x.CurrentAttention).ToList()[0].CurrentAttention;
+            cumulativeAttentionResult.comparisonName = AttentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[0].name;
+            cumulativeAttentionResult.attentionValue = AttentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[0].CumulativeAttention;
         }
 
         public void GetMedianAttention()
         {
-            int mid = (LocalAttentionRecordsList.Count - 1) / 2;
-            currentAttentionResult.comparisonName = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[mid].name;
-            currentAttentionResult.attentionValue = LocalAttentionRecordsList.ToList().OrderBy(x => x.currentAttention).ToList()[mid].currentAttention;
-            cumulativeAttentionResult.comparisonName = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[mid].name;
-            cumulativeAttentionResult.attentionValue = LocalAttentionRecordsList.ToList().OrderBy(x => x.cumulativeAttention).ToList()[mid].cumulativeAttention;
+            int mid = (AttentionTrackers.Count - 1) / 2;
+            currentAttentionResult.comparisonName = AttentionTrackers.ToList().OrderBy(x => x.CurrentAttention).ToList()[mid].name;
+            currentAttentionResult.attentionValue = AttentionTrackers.ToList().OrderBy(x => x.CurrentAttention).ToList()[mid].CurrentAttention;
+            cumulativeAttentionResult.comparisonName = AttentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[mid].name;
+            cumulativeAttentionResult.attentionValue = AttentionTrackers.ToList().OrderBy(x => x.CumulativeAttention).ToList()[mid].CumulativeAttention;
         }
 
         public void GetLargestAttention()
         {
-            currentAttentionResult.comparisonName = LocalAttentionRecordsList.OrderBy(x => x.currentAttention).Reverse().ToList()[0].name;
-            currentAttentionResult.attentionValue = LocalAttentionRecordsList.OrderBy(x => x.currentAttention).Reverse().ToList()[0].currentAttention;
-            cumulativeAttentionResult.comparisonName = LocalAttentionRecordsList.OrderBy(x => x.cumulativeAttention).Reverse().ToList()[0].name;
-            cumulativeAttentionResult.attentionValue = LocalAttentionRecordsList.OrderBy(x => x.cumulativeAttention).Reverse().ToList()[0].cumulativeAttention;
+            currentAttentionResult.comparisonName = AttentionTrackers.OrderBy(x => x.CurrentAttention).Reverse().ToList()[0].name;
+            currentAttentionResult.attentionValue = AttentionTrackers.OrderBy(x => x.CurrentAttention).Reverse().ToList()[0].CurrentAttention;
+            cumulativeAttentionResult.comparisonName = AttentionTrackers.OrderBy(x => x.CumulativeAttention).Reverse().ToList()[0].name;
+            cumulativeAttentionResult.attentionValue = AttentionTrackers.OrderBy(x => x.CumulativeAttention).Reverse().ToList()[0].CumulativeAttention;
         }
 
         public void GetCombinedAttention()
         {
-            float currentTotal = LocalAttentionRecordsList.Sum(x => x.currentAttention);
-            currentAttentionResult.comparisonName = "Total";
+            float currentTotal = AttentionTrackers.Sum(x => x.CurrentAttention);
+            currentAttentionResult.comparisonName = "Current Attention Total";
             currentAttentionResult.attentionValue = currentTotal;
-            float cumulativeTotal = LocalAttentionRecordsList.Sum(x => x.cumulativeAttention);
-            cumulativeAttentionResult.comparisonName = "Total";
+            float cumulativeTotal = AttentionTrackers.Sum(x => x.CumulativeAttention);
+            cumulativeAttentionResult.comparisonName = "Cumulative Attention Total";
             cumulativeAttentionResult.attentionValue = cumulativeTotal;
         }
 
@@ -163,25 +162,30 @@ namespace AttentionDrivenScenography
             // NOTE THIS IS SUPER HACKY. IT GETS THE FIRST TRACKER IN THE LIST AND WORKS IT OUT AS A PROPORTION OF THE TOTAL
             // IT'S NOT GOOD BUT IT IS A FUDGE FOR A STICKY PROBLEM I CAN'T BE BOTHERED TO SOLVE RIGHT NOW. ANSWERS ON A POSTCARD.
             // Can we save it to a list available in the behaviour instead maybe?
-
             // Current
-            float currentTotal = LocalAttentionRecordsList.Sum(x => x.currentAttention);
+            float currentTotal = AttentionTrackers.Sum(x => x.CurrentAttention);
             if (currentTotal == 0)
             {
-                currentTotal = 1f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
+                currentAttentionResult.attentionValue = 0f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
+            } 
+            else
+            {
+                float currentFirstTrackerPecentage = AttentionTrackers[0].CurrentAttention / currentTotal; // this returns a 0.0f to 1.0f based value, more useful than 100% based.
+                currentAttentionResult.comparisonName = $"Proportional for {AttentionTrackers[0].name}";
+                currentAttentionResult.attentionValue = currentFirstTrackerPecentage;
             }
-            float currentFirstTrackerPecentage = LocalAttentionRecordsList[0].currentAttention / currentTotal; // this returns a 0.0f to 1.0f based value, more useful than 100% based.
-            currentAttentionResult.comparisonName = $"Proportional for {LocalAttentionRecordsList[0].name}";
-            currentAttentionResult.attentionValue = currentFirstTrackerPecentage;
             // Cumulative
-            float cumulativeTotal = LocalAttentionRecordsList.Sum(x => x.cumulativeAttention);
+            float cumulativeTotal = AttentionTrackers.Sum(x => x.CumulativeAttention);
             if (cumulativeTotal == 0)
             {
-                cumulativeTotal = 1f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
+                cumulativeAttentionResult.attentionValue = 0f; // eugh this is hacky, NaN divide by zero workaround? - is there a better way?
             }
-            float cumulativeFirstTrackerPecentage = LocalAttentionRecordsList[0].cumulativeAttention / cumulativeTotal;
-            cumulativeAttentionResult.comparisonName = $"Proportional for {LocalAttentionRecordsList[0].name}";
-            cumulativeAttentionResult.attentionValue = cumulativeFirstTrackerPecentage;
+            else
+            {
+                float cumulativeFirstTrackerPecentage = AttentionTrackers[0].CumulativeAttention / cumulativeTotal;
+                cumulativeAttentionResult.comparisonName = $"Proportional for {AttentionTrackers[0].name}";
+                cumulativeAttentionResult.attentionValue = cumulativeFirstTrackerPecentage;
+            }
         }
 
         public float MapValue(float value, float fromLow, float fromHigh, float toLow, float toHigh)
