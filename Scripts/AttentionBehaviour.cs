@@ -69,6 +69,7 @@ namespace AttentionDrivenScenography
 
         public abstract void AttentionEffect(); // Override this to create bespoke effects in subclass.
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             if(AttentionTracker.gameObject != gameObject)
@@ -77,5 +78,6 @@ namespace AttentionDrivenScenography
                 Gizmos.DrawLine(transform.position, AttentionTracker.transform.position);
             }
         }
+#endif
     }
 }
