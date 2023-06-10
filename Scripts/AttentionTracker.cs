@@ -28,7 +28,6 @@ namespace AttentionDrivenScenography
         private Bounds meshBounds;
         private AttentionDatastore AttnDatastore;
 
-        // Start is called before the first frame update
         void Start()
         {
             CamSetup();
@@ -70,7 +69,6 @@ namespace AttentionDrivenScenography
             return combinedBounds;
         }
 
-        // Update is called once per frame
         void FixedUpdate()
         {
             meshBounds = GetCombinedRendererBounds();
@@ -89,8 +87,6 @@ namespace AttentionDrivenScenography
 
         private void WriteToDatastore()
         {
-            // TODO: check if object already exists by name? If not exist then new struct, else update cumulative attn.
-            // extract to method to use here and fixedupdate.
             AttentionTrackingObjectData objectData = new AttentionTrackingObjectData
             {
                 name = name,
