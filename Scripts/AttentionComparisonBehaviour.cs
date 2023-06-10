@@ -43,7 +43,7 @@ namespace AttentionDrivenScenography
         public EventChecks eventChecks = EventChecks.None;
         // Modes
         public Comparisons comparisonMode = new Comparisons();
-
+        // Debug
         public Color trackerLineColor = Color.magenta;
 
         void Awake()
@@ -143,9 +143,12 @@ namespace AttentionDrivenScenography
 
         public void GetProportionalAttention()
         {
-            // NOTE THIS IS SUPER HACKY. IT GETS THE FIRST TRACKER IN THE LIST AND WORKS IT OUT AS A PROPORTION OF THE TOTAL
-            // IT'S NOT GOOD BUT IT IS A FUDGE FOR A STICKY PROBLEM I CAN'T BE BOTHERED TO SOLVE RIGHT NOW. ANSWERS ON A POSTCARD.
-            // Can we save it to a list available in the behaviour instead maybe?
+            // TODO: Is there a better, less hacky approach to this?
+            // It gets the first tracker in the list and calculates its proportion of the total attention.
+            // If the relevant object is the first in list, it works, and then can replicate (inefficiently) per object if needed.
+            // But "unexpected" behaviour might occur using a different object as the first in the list. Or if the list got reordered.
+            // Can a list of the proportional values be saved instead? Might be less computationally intensive, but how to handle in behaviour?
+
             // Current
             float currentTotal = AttentionTrackers.Sum(x => x.CurrentAttention);
             if (currentTotal == 0)
