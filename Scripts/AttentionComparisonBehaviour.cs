@@ -74,6 +74,7 @@ namespace AttentionDrivenScenography
                 if (tracker == null)
                 {
                     cumulativeAttention = AttentionDatastore.AttentionTrackingObjects.Find(x => x.name == tracker.name).cumulativeAttention;
+                    currentAttention = 0f;
                 }
                 else
                 {
@@ -88,7 +89,7 @@ namespace AttentionDrivenScenography
             switch (comparisonMode)
             {
                 case Comparisons.Total:
-                    GetCombinedAttention();
+                    GetTotalAttention();
                     return;
                 case Comparisons.Proportional:
                     GetProportionalAttention();
@@ -130,7 +131,7 @@ namespace AttentionDrivenScenography
             cumulativeAttentionResult.attentionValue = AttentionTrackers.OrderBy(x => x.CumulativeAttention).Reverse().ToList()[0].CumulativeAttention;
         }
 
-        public void GetCombinedAttention()
+        public void GetTotalAttention()
         {
             float currentTotal = AttentionTrackers.Sum(x => x.CurrentAttention);
             currentAttentionResult.comparisonName = "Current Attention Total";
