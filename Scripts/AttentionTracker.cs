@@ -20,7 +20,7 @@ namespace AttentionDrivenScenography
 
         // Other Properties
         [Tooltip("Set the distance after which the object will not be considered on-screen.")]
-        [Range(0.0f, 1000.0f)][SerializeField] private double distanceThreshold = 50.0f;
+        [Range(0.0f, 50.0f)][SerializeField] private double distanceThreshold = 50.0f;
         [Tooltip("Specify a camera if issues with attention occur, e.g. if using multiple cams.")]
         public Camera cam;
         private List<Collider> childColliders;
