@@ -6,6 +6,7 @@ namespace AttentionDrivenScenography
 {
     public class DisableObjects : MonoBehaviour
     {
+        public GameObject[] objectsToDisable;
         // Start is called before the first frame update
         void Start()
         {
