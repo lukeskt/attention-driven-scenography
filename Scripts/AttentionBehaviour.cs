@@ -8,6 +8,7 @@ namespace AttentionDrivenScenography
         // Attention Ratings Sources
         [field: SerializeField, HideInInspector] public AttentionDatastore AttentionDatastore { get; set; }
         [field: SerializeField] public AttentionTracker AttentionTracker { get; set; }
+        private string trackerName;
         // Current Attention
         private float currentAttentionRating = 0f;
         public virtual float CurrentAttentionRating { get => currentAttentionRating; set => currentAttentionRating = value; }
@@ -38,7 +39,10 @@ namespace AttentionDrivenScenography
         }
 
         void OnEnable() { if (eventChecks == EventChecks.OnEnableCheck) { GetAttentionValues(); AttentionEffect(); } }
-        void Start() { if (eventChecks == EventChecks.StartCheck) { GetAttentionValues(); AttentionEffect(); } }
+        void Start() { 
+            trackerName = AttentionTracker.name; 
+            if (eventChecks == EventChecks.StartCheck) { GetAttentionValues(); AttentionEffect(); } 
+        }
         void FixedUpdate() { if (eventChecks == EventChecks.FixedUpdateCheck) { GetAttentionValues(); AttentionEffect(); } }
         void Update() { 
             if (eventChecks == EventChecks.UpdateCheck) { 
@@ -57,7 +61,8 @@ namespace AttentionDrivenScenography
             }
             else
             {
-                CumulativeAttentionRating = AttentionDatastore.AttentionTrackingObjects.Find(x => x.name == AttentionTracker.name).cumulativeAttention;
+                CurrentAttentionRating = 0f;
+                CumulativeAttentionRating = AttentionDatastore.AttentionTrackingObjects.Find(x => x.name == trackerName).cumulativeAttention;
                 Debug.LogWarning("Tracker not active, no current attention value available, getting cumulative attention value from Datastore...");
             }
         }
@@ -72,7 +77,7 @@ namespace AttentionDrivenScenography
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if(AttentionTracker.gameObject != gameObject)
+            if(AttentionTracker.gameObject != gameObject && AttentionTracker != null)
             {
                 Gizmos.color = trackerLineColor;
                 Gizmos.DrawLine(transform.position, AttentionTracker.transform.position);

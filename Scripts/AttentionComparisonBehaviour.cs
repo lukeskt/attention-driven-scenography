@@ -10,6 +10,7 @@ namespace AttentionDrivenScenography
         // Attention Ratings Sources
         [field: SerializeField, HideInInspector] public AttentionDatastore AttentionDatastore { get; set; }
         [field: SerializeField] public List<AttentionTracker> AttentionTrackers { get; set; }
+        private List<string> trackerNames = new List<string>();
 
         public struct AttentionComparisonResult
         {
@@ -54,7 +55,13 @@ namespace AttentionDrivenScenography
         }
 
         void OnEnable() { if (eventChecks == EventChecks.OnEnableCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); } }
-        void Start() { if (eventChecks == EventChecks.StartCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); } }
+        void Start() {
+            foreach (var tracker in AttentionTrackers)
+            {
+                trackerNames.Add(tracker.name);
+            }
+            if (eventChecks == EventChecks.StartCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); } 
+        }
         void FixedUpdate() { if (eventChecks == EventChecks.FixedUpdateCheck) { GetAttentionValues(); ProcessAttentionValues(comparisonMode); AttentionEffect(); } }
         void Update() { 
             if (eventChecks == EventChecks.UpdateCheck) { 
@@ -73,7 +80,8 @@ namespace AttentionDrivenScenography
                 float cumulativeAttention = 0f;
                 if (tracker == null)
                 {
-                    cumulativeAttention = AttentionDatastore.AttentionTrackingObjects.Find(x => x.name == tracker.name).cumulativeAttention;
+                    var i = AttentionTrackers.IndexOf(tracker);
+                    cumulativeAttention = AttentionDatastore.AttentionTrackingObjects.Find(x => x.name == trackerNames[i]).cumulativeAttention;
                     currentAttention = 0f;
                 }
                 else
@@ -187,7 +195,7 @@ namespace AttentionDrivenScenography
         {
             foreach (AttentionTracker tracker in AttentionTrackers)
             {
-                if (tracker.gameObject != gameObject)
+                if (tracker.gameObject != gameObject && tracker.gameObject != null)
                 {
                     Gizmos.color = trackerLineColor;
                     Gizmos.DrawLine(transform.position, tracker.transform.position);
