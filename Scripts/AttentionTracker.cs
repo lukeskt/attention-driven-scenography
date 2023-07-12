@@ -5,6 +5,8 @@ using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using Unity.Logging;
+using ADSLogging;
 
 namespace AttentionDrivenScenography
 {
@@ -45,6 +47,16 @@ namespace AttentionDrivenScenography
             }
         }
 
+        private void OnEnable()
+        {
+            InvokeRepeating("ADSLogAttention", 2, 1);
+        }
+
+        private void ADSLogAttention()
+        {
+            Log.To(ADSLogger.ADSLogging).Info($"{name} Current Attention: {CurrentAttention}, Cumulative Attention: {CumulativeAttention}");
+        }
+
         private void CamSetup()
         {
             if (!cam)
@@ -82,6 +94,7 @@ namespace AttentionDrivenScenography
 
         private void OnDisable ()
         {
+            CancelInvoke();
             if (AttnDatastore) WriteToDatastore();
         }
 

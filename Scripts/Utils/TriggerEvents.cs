@@ -13,17 +13,17 @@ namespace AttentionDrivenScenography
 
         private void OnTriggerEnter(Collider other)
         {
-            triggerEnter.Invoke();
+            if (other.gameObject.tag == "Player") triggerEnter.Invoke();
         }
 
         private void OnTriggerStay(Collider other)
         {
-            triggerStay.Invoke();
+            if (other.gameObject.tag == "Player") triggerStay.Invoke();
         }
 
         private void OnTriggerExit(Collider other)
         {
-            triggerExit.Invoke();
+            if (other.gameObject.tag == "Player") triggerExit.Invoke();
         }
     }
 }
