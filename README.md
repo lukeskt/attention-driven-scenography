@@ -1,6 +1,8 @@
 # Attention-Driven Scenography (ADS)
 
-PLEASE NOTE: Documentation update in progress, missing some elements.
+PLEASE NOTE: This project was part of my PhD (2018 - 2025), and I do not have the time to maintain it for the foreseeable. I will be archiving it in about 1 month, and after a year potentially deleting it. Thanks.
+
+--- 
 
 ADS is a Unity plugin formalising the design framework from my PhD thesis. It allows tracking of Current and Cumulative Attention to drive dynamic and long-term changes in environmental storytelling in games and other game engine-based experiences. 
 
